@@ -2,7 +2,7 @@ ping:
 	ansible webservers -m ping
 
 prepare:
-	ansible-playbook playbook.yml
+	ansible-playbook playbook.yml --tags setup
 
 deploy:
-	ansible-playbook deploy.yml --tags deploy
+	ansible-playbook playbook.yml --tags deploy

@@ -6,7 +6,6 @@ This project uses **Ansible** to automate the provisioning and deployment of con
 [![Actions Status](https://github.com/Zyabridos/devops-for-programmers-project-76/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Zyabridos/devops-for-programmers-project-76/actions)
 
 ## Requirements
-
 - Python 3.x
 - Ansible 2.10+
 - Two configured servers (DigitalOcean or similar)
@@ -23,14 +22,21 @@ This project uses **Ansible** to automate the provisioning and deployment of con
 ansible-galaxy install -r requirements.yml
 ```
 
-### To ping webservers group:
+2. **Check your inventory file:**:
+Ensure inventory.ini contains your correct server IPs and SSH users.
+Example:
+```bash
+[webservers]
+web-1 ansible_host=159.223.13.142 ansible_user=root
+web-2 ansible_host=159.223.223.227 ansible_user=root
+```
 
+3. **To ping webservers group:**:
 Pings all servers in the `webservers` group to verify SSH connectivity and Ansible setup.
 
 ```bash
 make ping
 ```
-
 Expected output:
 
 ```js
@@ -44,16 +50,7 @@ web-2 | SUCCESS => {
 }
 ```
 
-## Check your inventory file:
-Ensure inventory.ini contains your correct server IPs and SSH users.
-Example:
-```bash
-[webservers]
-web-1 ansible_host=159.223.13.142 ansible_user=root
-web-2 ansible_host=159.223.223.227 ansible_user=root
-```
-
-## Run the setup using Makefile:
+4. **Run the setup using Makefile:**:
 ```bash
 make prepare
 ```
@@ -62,6 +59,49 @@ make prepare
 - Install pip
 - Install the docker Python module
 - Prepare the servers for deploying container-based apps
+
+# 🐳 Deploy Redmine
+1. **Test locally**
+```bash
+docker run -d -p 3000:3000 --name redmine redmine:5.1
+Visit: http://localhost:3000
+```
+
+## 2. Manually start on both servers
+SSH into each server and run:
+
+```bash
+docker rm -f redmine
+docker run -d -p 3000:3000 --name redmine redmine:5.1
+```
+
+Verify with:
+```bash
+curl http://localhost:3000
+```
+
+## 3. Define Redmine port variable
+In group_vars/all.yml:
+```yaml
+redmine_port: 3000
+```
+# Configure Load Balancer
+In DigitalOcean:
+
+- Add forwarding rule:
+--HTTPS 443 → Droplet Port: 3000
+- Attach domain: ansible-container-orchestrator.online
+- Add certificate using Let's Encrypt
+- Make sure A-record points to the load balancer IP
+
+# Deployment Check
+Visit:
+IP: http://159.223.13.142:3000 or http://159.223.223.227:3000
+
+Domain: https://ansible-container-orchestrator.online
+
+# Link to Deployed Application
+👉 https://ansible-container-orchestrator.online
 
 ## 📌 Notes
 - Main playbook name should be **playbook.yml**
