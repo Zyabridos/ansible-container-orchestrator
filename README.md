@@ -1,6 +1,6 @@
 # Ansible Container Orchestrator
 
-This project uses **Ansible** to automate environment preparation for container-based applications. It installs required system tools like `pip` and the `docker` Python module on a group of web servers.
+This project uses **Ansible** to automate the provisioning and deployment of containerized applications like Redmine across multiple servers. It installs required system tools like `pip` and the `docker` Python module on a group of web servers.
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Zyabridos/devops-for-programmers-project-76/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Zyabridos/devops-for-programmers-project-76/actions)
@@ -12,6 +12,8 @@ This project uses **Ansible** to automate environment preparation for container-
 - Two configured servers (DigitalOcean or similar)
 - SSH access with root privileges
 - Your public SSH key must be added to each server
+- Docker installed on both servers
+- Load balancer configured on DigitalOcean
 
 ## Setup Instructions
 
@@ -57,10 +59,9 @@ make prepare
 ```
 
 ## This will:
-
--Install pip
--Install the docker Python module
--Prepare the servers for deploying container-based apps
+- Install pip
+- Install the docker Python module
+- Prepare the servers for deploying container-based apps
 
 ## 📌 Notes
 - Main playbook name should be **playbook.yml**

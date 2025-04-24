@@ -1,10 +1,19 @@
-- hosts: all
+- hosts: webservers
   become: true
-
   vars:
-    pip_install_packages:
-      - name: docker
+    redmine_image: redmine:5.1
+  tasks:
+    - name: Generate .env file
+      template:
+        src: templates/redmine.env.j2
+        dest: /root/redmine.env
 
-  roles:
-    - geerlingguy.pip
-    - geerlingguy.docker
+    - name: Deploy Redmine container
+      community.docker.docker_container:
+        name: redmine
+        image: "{{ redmine_image }}"
+        restart_policy: always
+        ports:
+          - "{{ redmine_port }}:3000"
+        env_file: /root/redmine.env
+
