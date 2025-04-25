@@ -2,10 +2,13 @@ ping:
 	ansible webservers -m ping
 
 prepare:
-	ansible-playbook playbook.yml --tags setup
+	ansible-playbook playbook.yml --tags setup --ask-vault-pass
 
 deploy:
-	ansible-playbook playbook.yml --tags deploy
+	ansible-playbook playbook.yml --tags deploy --ask-vault-pass
+
+debug:
+	ansible-playbook playbook.yml --tags debug --ask-vault-pass
 
 vault-edit:
 	ansible-vault edit group_vars/webservers/vault.yml
