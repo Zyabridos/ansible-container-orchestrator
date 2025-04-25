@@ -1,0 +1,15 @@
+db_host: db-postgresql-for-ansible-project-do-user-21204823-0.i.db.ondigitalocean.com
+db_port: 25060
+db_name: defaultdb
+db_user: doadmin
+
+redmine_image: bitnami/redmine:latest
+redmine_port: 3000
+
+redmine_env_vars:
+  REDMINE_DATABASE_TYPE: postgresql
+  REDMINE_DATABASE_HOST: "{{ db_host }}"
+  REDMINE_DATABASE_PORT_NUMBER: "{{ db_port }}"
+  REDMINE_DATABASE_NAME: "{{ db_name }}"
+  REDMINE_DATABASE_USER: "{{ db_user }}"
+  REDMINE_DATABASE_PASSWORD: "{{ db_password }}"

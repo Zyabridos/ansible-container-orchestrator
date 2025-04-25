@@ -1,6 +1,6 @@
 # Ansible Container Orchestrator
 
-This project uses **Ansible** to automate the provisioning and deployment of containerized applications like Redmine across multiple servers. It installs required system tools like `pip` and the `docker` Python module on a group of web servers.
+This project uses **Ansible** to automate the provisioning and deployment of containerized applications (currently for this example I am using Redmine image) across multiple servers. It installs required system tools like `pip` and the `docker` Python module on a group of web servers.
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Zyabridos/devops-for-programmers-project-76/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Zyabridos/devops-for-programmers-project-76/actions)
@@ -22,16 +22,17 @@ This project uses **Ansible** to automate the provisioning and deployment of con
 ansible-galaxy install -r requirements.yml
 ```
 
-2. **Check your inventory file:**:
-Ensure inventory.ini contains your correct server IPs and SSH users.
+2. **Check your inventory file**:
+Ensure `inventory.ini` contains your correct server IPs and SSH users.
+
 Example:
-```bash
+```ini
 [webservers]
 web-1 ansible_host=159.223.13.142 ansible_user=root
 web-2 ansible_host=159.223.223.227 ansible_user=root
 ```
 
-3. **To ping webservers group:**:
+3. **Ping the webservers group**:
 Pings all servers in the `webservers` group to verify SSH connectivity and Ansible setup.
 
 ```bash
@@ -39,7 +40,7 @@ make ping
 ```
 Expected output:
 
-```js
+```json
 web-1 | SUCCESS => {
   "changed": false,
   "ping": "pong"
@@ -50,61 +51,45 @@ web-2 | SUCCESS => {
 }
 ```
 
-4. **Run the setup using Makefile:**:
+4. **Run the setup using Makefile**:
 ```bash
 make prepare
 ```
-
-## This will:
+This will:
 - Install pip
 - Install the docker Python module
 - Prepare the servers for deploying container-based apps
 
-# 🐳 Deploy Redmine
-1. **Test locally**
-```bash
-docker run -d -p 3000:3000 --name redmine redmine:5.1
-Visit: http://localhost:3000
-```
-
-## 2. Manually start on both servers
-SSH into each server and run:
+## 🐳 Deploy Redmine
 
 ```bash
-docker rm -f redmine
-docker run -d -p 3000:3000 --name redmine redmine:5.1
+make deploy
 ```
+This will:
+- Generate the Redmine `.env` file with PostgreSQL settings
+- Remove existing Redmine container if any
+- Deploy Redmine with Bitnami image and PostgreSQL support
 
-Verify with:
-```bash
-curl http://localhost:3000
-```
+Redmine will be available at:
 
-## 3. Define Redmine port variable
-In group_vars/all.yml:
-```yaml
-redmine_port: 3000
-```
-# Configure Load Balancer
-In DigitalOcean:
+- http://159.223.13.142:3000
+- http://159.223.223.227:3000
 
-- Add forwarding rule:
---HTTPS 443 → Droplet Port: 3000
-- Attach domain: ansible-container-orchestrator.online
-- Add certificate using Let's Encrypt
-- Make sure A-record points to the load balancer IP
+## Configure Load Balancer (DigitalOcean)
 
-# Deployment Check
-Visit:
-IP: http://159.223.13.142:3000 or http://159.223.223.227:3000
+- Add forwarding rule: HTTPS 443 → Droplet Port 3000
+- Attach domain: `ansible-container-orchestrator.online`
+- Use Let's Encrypt for automatic SSL certificate
+- Point domain A-record to the load balancer IP
 
-Domain: https://ansible-container-orchestrator.online
-
-# Link to Deployed Application
+## 🔗 Link to Deployed Application
 👉 https://ansible-container-orchestrator.online
 
 ## 📌 Notes
 - Main playbook name should be **playbook.yml**
-- Inventory file name should be **inventory.yml** (alternatively you can change ansible config file)
-- The hosts group must be called webservers (see inventory.ini)
+- Inventory file name is **inventory.ini**
+- Hosts group must be called `webservers`
 - Ensure your servers allow SSH access from your machine
+- Redmine runs in a Docker container using the Bitnami image
+- PostgreSQL is hosted separately and must be accessible from both webservers
+- Secrets like DB password are stored in an encrypted file (`vault.yml`)

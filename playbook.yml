@@ -1,11 +1,10 @@
----
 - hosts: webservers
   become: true
 
   vars:
     pip_install_packages:
       - name: docker
-    redmine_image: redmine:5.1
+    redmine_image: bitnami/redmine:latest
     redmine_port: 3000
 
   roles:
@@ -19,6 +18,14 @@
       template:
         src: templates/redmine.env.j2
         dest: /root/redmine.env
+        mode: '0600'
+      tags: deploy
+
+    - name: Remove existing Redmine container
+      community.docker.docker_container:
+        name: redmine
+        state: absent
+      ignore_errors: yes
       tags: deploy
 
     - name: Deploy Redmine container
@@ -30,3 +37,4 @@
           - "{{ redmine_port }}:3000"
         env_file: /root/redmine.env
       tags: deploy
+    
