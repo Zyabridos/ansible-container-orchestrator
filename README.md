@@ -16,23 +16,7 @@ This project uses **Ansible** to automate the provisioning and deployment of con
 
 ## Setup Instructions
 
-1. **Install required Ansible roles**:
-
-```bash
-make install-roles
-```
-
-2. **Check your inventory file**:
-Ensure `inventory.ini` contains your correct server IPs and SSH users.
-
-Example:
-```ini
-[webservers]
-web-1 ansible_host=159.223.13.142 ansible_user=root
-web-2 ansible_host=159.223.223.227 ansible_user=root
-```
-
-3. **Ping the webservers group**:
+1. **Ping the webservers group**:
 Pings all servers in the `webservers` group to verify SSH connectivity and Ansible setup.
 
 ```bash
@@ -51,29 +35,41 @@ web-2 | SUCCESS => {
 }
 ```
 
-4. **Run the setup using Makefile**:
-```bash
-make prepare
-```
-This will:
-- Install pip
-- Install the docker Python module
-- Prepare the servers for deploying container-based apps
+2. **Install required roles, ping servers, prepare them:**
 
-## 🐳 Deploy Redmine
+```bash
+make setup
+```
+
+This command will: 
+- Install external Ansible roles
+- Ping all servers in webservers group
+- Install pip, Docker and prepare servers for deployment
+
+3. **Run the setup using Makefile**:
+Ensure `inventory.ini` contains your correct server IPs and SSH users.
+
+Example:
+```ini
+[webservers]
+web-1 ansible_host=159.223.13.142 ansible_user=root
+web-2 ansible_host=159.223.223.227 ansible_user=root
+```
 
 ```bash
 make deploy
 ```
 This will:
-- Generate the Redmine `.env` file with PostgreSQL settings
-- Remove existing Redmine container if any
-- Deploy Redmine with Bitnami image and PostgreSQL support
+- Generate a .env file for Redmine
+- Remove existing Redmine container (if any)
+- Deploy a new Redmine container with Bitnami image
+- Configure Redmine environment automatically
 
 Redmine will be available at:
 
 - http://159.223.13.142:3000
 - http://159.223.223.227:3000
+
 
 ## Configure Load Balancer (DigitalOcean)
 

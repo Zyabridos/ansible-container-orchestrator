@@ -24,3 +24,8 @@ clean-redmine:
 
 check:
 	ansible webservers -a "curl -s -o /dev/null -w '%{http_code}' http://localhost:3000"
+
+setup:
+	make install-roles
+	ansible webservers -m ping
+	ansible-playbook playbook.yml --tags setup --ask-vault-pass
