@@ -1,3 +1,6 @@
+pip_install_packages:
+  - name: docker
+
 db_host: db-postgresql-for-ansible-project-do-user-21204823-0.i.db.ondigitalocean.com
 db_port: 25060
 db_name: defaultdb
@@ -13,3 +16,28 @@ redmine_env_vars:
   REDMINE_DATABASE_NAME: "{{ db_name }}"
   REDMINE_DATABASE_USER: "{{ db_user }}"
   REDMINE_DATABASE_PASSWORD: "{{ db_password }}"
+
+datadog_api_key: "{{ vault_datadog_api_key }}"
+
+datadog_config:
+  tags:
+    - env:production
+    - role:web
+  log_enabled: true
+  apm_config:
+    enabled: true
+
+datadog_checks:
+  http_check:
+    init_config: {}
+    instances:
+      - name: Redmine Homepage
+        url: "http://localhost:{{ redmine_port }}"
+        timeout: 5
+        method: GET
+        http_response_status_code: 200
+        tags:
+          - service:redmine
+
+datadog_manage_config: false
+datadog_disable_untracked_checks: true

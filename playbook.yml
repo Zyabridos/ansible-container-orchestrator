@@ -2,37 +2,6 @@
   hosts: all
   become: true
 
-  vars:
-    pip_install_packages:
-      - name: docker
-    redmine_image: bitnami/redmine:latest
-    redmine_port: 3000
-
-    datadog_api_key: "{{ vault_datadog_api_key }}"
-
-    datadog_config:
-      tags:
-        - env:production
-        - role:web
-      log_enabled: true
-      apm_config:
-        enabled: true
-
-    datadog_checks:
-      http_check:
-        init_config: {}
-        instances:
-          - name: Redmine Homepage
-            url: "http://localhost:{{ redmine_port }}"
-            timeout: 5
-            method: GET
-            http_response_status_code: 200
-            tags:
-              - service:redmine
-
-    datadog_manage_config: false
-    datadog_disable_untracked_checks: true
-
   roles:
     - role: geerlingguy.pip
       tags: setup
