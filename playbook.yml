@@ -30,6 +30,9 @@
             tags:
               - service:redmine
 
+    datadog_manage_config: false
+    datadog_disable_untracked_checks: true
+
   roles:
     - role: geerlingguy.pip
       tags: setup
@@ -39,11 +42,6 @@
       tags: monitoring
 
   tasks:
-    - name: Debug API Key
-      debug:
-        msg: "Datadog API Key: {{ datadog_api_key }}"
-      tags: debug
-
     - name: Generate .env file for Redmine
       template:
         src: templates/redmine.env.j2

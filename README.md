@@ -19,7 +19,7 @@ This project uses **Ansible** to automate the provisioning and deployment of con
 1. **Install required Ansible roles**:
 
 ```bash
-ansible-galaxy install -r requirements.yml
+make install-roles
 ```
 
 2. **Check your inventory file**:

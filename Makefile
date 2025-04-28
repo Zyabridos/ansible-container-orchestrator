@@ -4,6 +4,9 @@ ping:
 prepare:
 	ansible-playbook playbook.yml --tags setup --ask-vault-pass
 
+install-roles:
+	ansible-galaxy install -r requirements.yml
+
 deploy:
 	ansible-playbook playbook.yml --tags deploy --ask-vault-pass
 
