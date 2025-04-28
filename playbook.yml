@@ -20,10 +20,10 @@
 
     datadog_checks:
       http_check:
-        init_config:
+        init_config: {}
         instances:
           - name: Redmine Homepage
-            url: "https://localhost:{{ redmine_port }}"
+            url: "http://localhost:{{ redmine_port }}"
             timeout: 5
             method: GET
             http_response_status_code: 200
