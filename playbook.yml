@@ -1,4 +1,4 @@
-- name: Install Redmine and Datadog Agent
+- name: Install Redmine
   hosts: all
   become: true
 
@@ -7,8 +7,6 @@
       tags: setup
     - role: geerlingguy.docker
       tags: setup
-    - role: datadog.datadog
-      tags: monitoring
 
   tasks:
     - name: Generate .env file for Redmine
@@ -34,3 +32,11 @@
           - "{{ redmine_port }}:3000"
         env_file: /root/redmine.env
       tags: deploy
+
+- name: Install Datadog Agent
+  hosts: webservers
+  become: true
+
+  roles:
+    - role: datadog.datadog
+      tags: monitoring
