@@ -10,7 +10,7 @@
 
   tasks:
     - name: Generate .env file for Redmine
-      template:
+      ansible.builtin.template:
         src: templates/redmine.env.j2
         dest: /root/redmine.env
         mode: '0600'
@@ -20,7 +20,7 @@
       community.docker.docker_container:
         name: redmine
         state: absent
-      ignore_errors: yes
+      failed_when: false
       tags: deploy
 
     - name: Deploy Redmine container
